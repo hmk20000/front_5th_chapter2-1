@@ -17,14 +17,20 @@ function createElement(tagName, options) {
 
   const { parent, ...rest } = options;
   Object.entries(rest).forEach(([key, value]) => {
-    element[key] = value;
+    if (key === 'dataset') {
+      Object.entries(value).forEach(([datasetKey, datasetValue]) => {
+        element.dataset[datasetKey] = datasetValue;
+      });
+    } else {
+      element[key] = value;
+    }
   });
   if (parent) parent.appendChild(element);
 
   return element;
 }
 
-function createUI($root) {
+function createMainLayout($root) {
   let $mainContainer = createElement('div', {
     className: 'bg-gray-100 p-8',
     parent: $root,
@@ -68,8 +74,59 @@ function createUI($root) {
   });
 }
 
+function createCartItem(product) {
+  var $newItem = createElement('div', {
+    id: product.id,
+    className: 'flex justify-between items-center mb-2',
+    parent: $cartList,
+  });
+
+  createElement('span', {
+    textContent: `${product.name} - ${product.price}원 x 1`,
+    parent: $newItem,
+  });
+
+  var $buttonGroup = createElement('div', {
+    parent: $newItem,
+  });
+
+  const BUTTON_CLASS = 'text-white px-2 py-1 rounded';
+
+  // 감소 버튼
+  createElement('button', {
+    className: `quantity-change bg-blue-500 ${BUTTON_CLASS} mr-1`,
+    parent: $buttonGroup,
+    textContent: '-',
+    dataset: {
+      productId: product.id,
+      change: -1,
+    },
+  });
+
+  // 증가 버튼
+  createElement('button', {
+    className: `quantity-change bg-blue-500 ${BUTTON_CLASS} mr-1`,
+    parent: $buttonGroup,
+    textContent: '+',
+    dataset: {
+      productId: product.id,
+      change: 1,
+    },
+  });
+
+  // 삭제 버튼
+  createElement('button', {
+    className: `remove-item bg-red-500 ${BUTTON_CLASS}`,
+    parent: $buttonGroup,
+    textContent: '삭제',
+    dataset: {
+      productId: product.id,
+    },
+  });
+}
+
 function main() {
-  createUI(document.getElementById('app'));
+  createMainLayout(document.getElementById('app'));
   updateProductOptions();
   calculateCartTotal();
 
@@ -222,27 +279,7 @@ $addCart.addEventListener('click', function () {
         alert('재고가 부족합니다.');
       }
     } else {
-      var $newItem = createElement('div', {
-        id: selectedProduct.id,
-        className: 'flex justify-between items-center mb-2',
-        parent: $cartList,
-      });
-
-      $newItem.innerHTML =
-        '<span>' +
-        selectedProduct.name +
-        ' - ' +
-        selectedProduct.price +
-        '원 x 1</span><div>' +
-        '<button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" data-product-id="' +
-        selectedProduct.id +
-        '" data-change="-1">-</button>' +
-        '<button class="quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1" data-product-id="' +
-        selectedProduct.id +
-        '" data-change="1">+</button>' +
-        '<button class="remove-item bg-red-500 text-white px-2 py-1 rounded" data-product-id="' +
-        selectedProduct.id +
-        '">삭제</button></div>';
+      createCartItem(selectedProduct);
       selectedProduct.quantity--;
     }
     calculateCartTotal();
