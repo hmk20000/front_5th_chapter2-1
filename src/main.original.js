@@ -10,41 +10,71 @@ var products = [
   { id: 'p4', name: '상품4', price: 15000, quantity: 0 },
   { id: 'p5', name: '상품5', price: 25000, quantity: 10 },
 ];
+
+function createElement(tagName, options) {
+  if (!tagName) throw new Error('tagName is required');
+  const element = document.createElement(tagName);
+
+  const { className, id, textContent, parent, ...rest } = options;
+  if (Object.keys(rest).length > 0) throw new Error('Invalid options');
+
+  if (className) element.className = className;
+  if (id) element.id = id;
+  if (textContent) element.textContent = textContent;
+  if (parent) parent.appendChild(element);
+
+  return element;
+}
+
+function createUI($root) {
+  let $mainContainer = createElement('div', {
+    className: 'bg-gray-100 p-8',
+    parent: $root,
+  });
+  let $contentWrapper = createElement('div', {
+    className:
+      'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8',
+    parent: $mainContainer,
+  });
+
+  // 아래는 모두 $contentWrapper의 자식 요소
+  createElement('h1', {
+    className: 'text-2xl font-bold mb-4',
+    textContent: '장바구니',
+    parent: $contentWrapper,
+  });
+  $cartList = createElement('div', {
+    id: 'cart-items',
+    parent: $contentWrapper,
+  });
+  $totalPrice = createElement('div', {
+    className: 'text-xl font-bold my-4',
+    id: 'cart-total',
+    parent: $contentWrapper,
+  });
+  $productSelect = createElement('select', {
+    className: 'border rounded p-2 mr-2',
+    id: 'product-select',
+    parent: $contentWrapper,
+  });
+  $addCart = createElement('button', {
+    className: 'bg-blue-500 text-white px-4 py-2 rounded',
+    id: 'add-to-cart',
+    textContent: '추가',
+    parent: $contentWrapper,
+  });
+  $stockStatusList = createElement('div', {
+    className: 'text-sm text-gray-500 mt-2',
+    id: 'stock-status',
+    parent: $contentWrapper,
+  });
+}
+
 function main() {
-  var appContainer = document.getElementById('app');
-  let mainContainer = document.createElement('div');
-  var contentWrapper = document.createElement('div');
-  let titleHeading = document.createElement('h1');
-  $cartList = document.createElement('div');
-  $totalPrice = document.createElement('div');
-  $productSelect = document.createElement('select');
-  $addCart = document.createElement('button');
-  $stockStatusList = document.createElement('div');
-  $cartList.id = 'cart-items';
-  $totalPrice.id = 'cart-total';
-  $productSelect.id = 'product-select';
-  $addCart.id = 'add-to-cart';
-  $stockStatusList.id = 'stock-status';
-  mainContainer.className = 'bg-gray-100 p-8';
-  contentWrapper.className =
-    'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8';
-  titleHeading.className = 'text-2xl font-bold mb-4';
-  $totalPrice.className = 'text-xl font-bold my-4';
-  $productSelect.className = 'border rounded p-2 mr-2';
-  $addCart.className = 'bg-blue-500 text-white px-4 py-2 rounded';
-  $stockStatusList.className = 'text-sm text-gray-500 mt-2';
-  titleHeading.textContent = '장바구니';
-  $addCart.textContent = '추가';
+  createUI(document.getElementById('app'));
   updateProductOptions();
-  contentWrapper.appendChild(titleHeading);
-  contentWrapper.appendChild($cartList);
-  contentWrapper.appendChild($totalPrice);
-  contentWrapper.appendChild($productSelect);
-  contentWrapper.appendChild($addCart);
-  contentWrapper.appendChild($stockStatusList);
-  mainContainer.appendChild(contentWrapper);
-  appContainer.appendChild(mainContainer);
   calculateCartTotal();
+
   setTimeout(function () {
     setInterval(function () {
       var luckyProduct = products[Math.floor(Math.random() * products.length)];
