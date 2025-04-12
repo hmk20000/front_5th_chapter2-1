@@ -15,12 +15,10 @@ function createElement(tagName, options) {
   if (!tagName) throw new Error('tagName is required');
   const element = document.createElement(tagName);
 
-  const { className, id, textContent, parent, ...rest } = options;
-  if (Object.keys(rest).length > 0) throw new Error('Invalid options');
-
-  if (className) element.className = className;
-  if (id) element.id = id;
-  if (textContent) element.textContent = textContent;
+  const { parent, ...rest } = options;
+  Object.entries(rest).forEach(([key, value]) => {
+    element[key] = value;
+  });
   if (parent) parent.appendChild(element);
 
   return element;
@@ -105,11 +103,12 @@ function main() {
 function updateProductOptions() {
   $productSelect.innerHTML = '';
   products.forEach(function (product) {
-    var opt = document.createElement('option');
-    opt.value = product.id;
-    opt.textContent = product.name + ' - ' + product.price + '원';
-    if (product.quantity === 0) opt.disabled = true;
-    $productSelect.appendChild(opt);
+    var opt = createElement('option', {
+      value: product.id,
+      textContent: product.name + ' - ' + product.price + '원',
+      parent: $productSelect,
+      disabled: product.quantity === 0,
+    });
   });
 }
 function calculateCartTotal() {
@@ -163,10 +162,11 @@ function calculateCartTotal() {
   }
   $totalPrice.textContent = '총액: ' + Math.round(totalPrice) + '원';
   if (discountRate > 0) {
-    var span = document.createElement('span');
-    span.className = 'text-green-500 ml-2';
-    span.textContent = '(' + (discountRate * 100).toFixed(1) + '% 할인 적용)';
-    $totalPrice.appendChild(span);
+    createElement('span', {
+      className: 'text-green-500 ml-2',
+      textContent: '(' + (discountRate * 100).toFixed(1) + '% 할인 적용)',
+      parent: $totalPrice,
+    });
   }
   updateStockStatusDisplay();
   renderPoints();
@@ -175,10 +175,11 @@ const renderPoints = () => {
   points = Math.floor(totalPrice / 1000);
   var $point = document.getElementById('loyalty-points');
   if (!$point) {
-    $point = document.createElement('span');
-    $point.id = 'loyalty-points';
-    $point.className = 'text-blue-500 ml-2';
-    $totalPrice.appendChild($point);
+    $point = createElement('span', {
+      id: 'loyalty-points',
+      className: 'text-blue-500 ml-2',
+      parent: $totalPrice,
+    });
   }
   $point.textContent = '(포인트: ' + points + ')';
 };
@@ -221,9 +222,12 @@ $addCart.addEventListener('click', function () {
         alert('재고가 부족합니다.');
       }
     } else {
-      var $newItem = document.createElement('div');
-      $newItem.id = selectedProduct.id;
-      $newItem.className = 'flex justify-between items-center mb-2';
+      var $newItem = createElement('div', {
+        id: selectedProduct.id,
+        className: 'flex justify-between items-center mb-2',
+        parent: $cartList,
+      });
+
       $newItem.innerHTML =
         '<span>' +
         selectedProduct.name +
@@ -239,7 +243,6 @@ $addCart.addEventListener('click', function () {
         '<button class="remove-item bg-red-500 text-white px-2 py-1 rounded" data-product-id="' +
         selectedProduct.id +
         '">삭제</button></div>';
-      $cartList.appendChild($newItem);
       selectedProduct.quantity--;
     }
     calculateCartTotal();
