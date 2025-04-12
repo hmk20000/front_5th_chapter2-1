@@ -1,8 +1,5 @@
-var $productSelect, $addCart, $cartList, $totalPrice, $stockStatusList;
-var lastSelectedProductId,
-  points = 0,
-  totalPrice = 0,
-  totalCartQuantity = 0;
+var lastSelectedProductId;
+
 var products = [
   { id: 'p1', name: '상품1', price: 10000, quantity: 50 },
   { id: 'p2', name: '상품2', price: 20000, quantity: 30 },
@@ -57,27 +54,27 @@ function createMainLayout($root) {
     textContent: '장바구니',
     parent: $contentWrapper,
   });
-  $cartList = createElement('div', {
+  createElement('div', {
     id: 'cart-items',
     parent: $contentWrapper,
   });
-  $totalPrice = createElement('div', {
+  createElement('div', {
     className: 'text-xl font-bold my-4',
     id: 'cart-total',
     parent: $contentWrapper,
   });
-  $productSelect = createElement('select', {
+  createElement('select', {
     className: 'border rounded p-2 mr-2',
     id: 'product-select',
     parent: $contentWrapper,
   });
-  $addCart = createElement('button', {
+  createElement('button', {
     className: 'bg-blue-500 text-white px-4 py-2 rounded',
     id: 'add-to-cart',
     textContent: '추가',
     parent: $contentWrapper,
   });
-  $stockStatusList = createElement('div', {
+  createElement('div', {
     className: 'text-sm text-gray-500 mt-2',
     id: 'stock-status',
     parent: $contentWrapper,
@@ -89,6 +86,7 @@ function createMainLayout($root) {
  * @param {Object} product 상품 정보
  */
 function createCartItem(product) {
+  const $cartList = document.getElementById('cart-items');
   var $newItem = createElement('div', {
     id: product.id,
     className: 'flex justify-between items-center mb-2',
@@ -142,7 +140,13 @@ function createCartItem(product) {
 function main() {
   createMainLayout(document.getElementById('app'));
   updateProductOptions(products);
-  calculateCartTotal($cartList, products);
+  calculateCartTotal(products);
+
+  const $addCart = document.getElementById('add-to-cart');
+  $addCart.addEventListener('click', handleAddCart);
+
+  const $cartList = document.getElementById('cart-items');
+  $cartList.addEventListener('click', handleCartItemClick);
 
   setTimeout(function () {
     setInterval(function () {
@@ -150,7 +154,7 @@ function main() {
       if (Math.random() < 0.3 && luckyProduct.quantity > 0) {
         luckyProduct.price = Math.round(luckyProduct.price * 0.8);
         alert('번개세일! ' + luckyProduct.name + '이(가) 20% 할인 중입니다!');
-        updateProductOptions($productSelect, products);
+        updateProductOptions(products);
       }
     }, 30000);
   }, Math.random() * 10000);
@@ -192,12 +196,14 @@ function updateProductOptions(products) {
 
 /**
  * 장바구니 총액 계산 함수
- * @param {Element} $cartList 장바구니 엘레멘트
  * @param {Array} products 상품 정보
  */
-function calculateCartTotal($cartList, products) {
-  totalPrice = 0;
-  totalCartQuantity = 0;
+function calculateCartTotal(products) {
+  const $cartList = document.getElementById('cart-items');
+  const $totalPrice = document.getElementById('cart-total');
+
+  var totalPrice = 0;
+  var totalCartQuantity = 0;
   // UI 요소이기 때문에 cartProducts가 아닌 cartItems로 설정
   var $cartItems = $cartList.children;
   var subtotal = 0;
@@ -252,16 +258,17 @@ function calculateCartTotal($cartList, products) {
       parent: $totalPrice,
     });
   }
-  updateStockStatusDisplay($stockStatusList, products);
-  renderPoints($totalPrice);
+  updateStockStatusDisplay(products);
+  renderPoints($totalPrice, totalPrice);
 }
 
 /**
  * 포인트 렌더링 함수
  * @param {Element} $totalPrice 총액 엘레멘트
+ * @param {number} totalPrice 총액
  */
-const renderPoints = ($totalPrice) => {
-  points = Math.floor(totalPrice / 1000);
+const renderPoints = ($totalPrice, totalPrice) => {
+  let points = Math.floor(totalPrice / 1000);
   var $point = document.getElementById('loyalty-points');
   if (!$point) {
     $point = createElement('span', {
@@ -278,7 +285,8 @@ const renderPoints = ($totalPrice) => {
  * @param {Element} $stockStatusList 재고 상태 표시 엘레멘트
  * @param {Array} products 상품 정보
  */
-function updateStockStatusDisplay($stockStatusList, products) {
+function updateStockStatusDisplay(products) {
+  const $stockStatusList = document.getElementById('stock-status');
   var stockStatusMessage = '';
   products.forEach(function (item) {
     if (item.quantity < 5) {
@@ -294,12 +302,12 @@ function updateStockStatusDisplay($stockStatusList, products) {
   $stockStatusList.textContent = stockStatusMessage;
 }
 
-main();
-
 /**
  * 추가 버튼 클릭 이벤트 핸들러
  */
-$addCart.addEventListener('click', function () {
+function handleAddCart() {
+  const $productSelect = document.getElementById('product-select');
+
   var selectedProductId = $productSelect.value;
   var selectedProduct = products.find(function (p) {
     return p.id === selectedProductId;
@@ -325,15 +333,15 @@ $addCart.addEventListener('click', function () {
       createCartItem(selectedProduct);
       selectedProduct.quantity--;
     }
-    calculateCartTotal($cartList, products);
+    calculateCartTotal(products);
     lastSelectedProductId = selectedProductId;
   }
-});
+}
 
 /**
  * 장바구니 아이템 클릭 이벤트 핸들러
  */
-$cartList.addEventListener('click', function (event) {
+function handleCartItemClick(event) {
   var $target = event.target;
   if (
     $target.classList.contains('quantity-change') ||
@@ -373,6 +381,8 @@ $cartList.addEventListener('click', function (event) {
       product.quantity += removedQuantity;
       $item.remove();
     }
-    calculateCartTotal($cartList, products);
+    calculateCartTotal(products);
   }
-});
+}
+
+main();
