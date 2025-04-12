@@ -11,6 +11,12 @@ var products = [
   { id: 'p5', name: '상품5', price: 25000, quantity: 10 },
 ];
 
+/**
+ * 엘레멘트 생성 함수
+ * @param {string} tagName 태그 이름
+ * @param {Object} options 옵션
+ * @returns {Element} 생성된 엘레멘트
+ */
 function createElement(tagName, options) {
   if (!tagName) throw new Error('tagName is required');
   const element = document.createElement(tagName);
@@ -30,6 +36,10 @@ function createElement(tagName, options) {
   return element;
 }
 
+/**
+ * 메인 레이아웃 생성 함수
+ * @param {Element} $root 루트 엘레멘트
+ */
 function createMainLayout($root) {
   let $mainContainer = createElement('div', {
     className: 'bg-gray-100 p-8',
@@ -74,6 +84,10 @@ function createMainLayout($root) {
   });
 }
 
+/**
+ * 장바구니 아이템 생성 함수
+ * @param {Object} product 상품 정보
+ */
 function createCartItem(product) {
   var $newItem = createElement('div', {
     id: product.id,
@@ -157,6 +171,10 @@ function main() {
     }, 60000);
   }, Math.random() * 20000);
 }
+
+/**
+ * 상품 옵션 업데이트 함수
+ */
 function updateProductOptions() {
   $productSelect.innerHTML = '';
   products.forEach(function (product) {
@@ -168,6 +186,10 @@ function updateProductOptions() {
     });
   });
 }
+
+/**
+ * 장바구니 총액 계산 함수
+ */
 function calculateCartTotal() {
   totalPrice = 0;
   totalCartQuantity = 0;
@@ -228,6 +250,10 @@ function calculateCartTotal() {
   updateStockStatusDisplay();
   renderPoints();
 }
+
+/**
+ * 포인트 렌더링 함수
+ */
 const renderPoints = () => {
   points = Math.floor(totalPrice / 1000);
   var $point = document.getElementById('loyalty-points');
@@ -240,6 +266,10 @@ const renderPoints = () => {
   }
   $point.textContent = '(포인트: ' + points + ')';
 };
+
+/**
+ * 재고 상태 표시 함수
+ */
 function updateStockStatusDisplay() {
   var stockStatusMessage = '';
   products.forEach(function (item) {
@@ -255,7 +285,12 @@ function updateStockStatusDisplay() {
   });
   $stockStatusList.textContent = stockStatusMessage;
 }
+
 main();
+
+/**
+ * 추가 버튼 클릭 이벤트 핸들러
+ */
 $addCart.addEventListener('click', function () {
   var selectedProductId = $productSelect.value;
   var selectedProduct = products.find(function (p) {
@@ -286,6 +321,10 @@ $addCart.addEventListener('click', function () {
     lastSelectedProductId = selectedProductId;
   }
 });
+
+/**
+ * 장바구니 아이템 클릭 이벤트 핸들러
+ */
 $cartList.addEventListener('click', function (event) {
   var $target = event.target;
   if (
