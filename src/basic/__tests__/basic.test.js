@@ -15,7 +15,7 @@ describe('basic test', () => {
   ])('$type 장바구니 시나리오 테스트', ({ loadFile }) => {
     let sel, addBtn, cartDisp, sum, stockInfo;
     const mockDate = new Date('2025-04-14');
-    const mockTuesday = new Date('2025-04-15');
+    // const mockTuesday = new Date('2025-04-15');
 
     beforeAll(async () => {
       // DOM 초기화
@@ -33,7 +33,7 @@ describe('basic test', () => {
     beforeEach(() => {
       // vi.useRealTimers();
       vi.useFakeTimers();
-      vi.setSystemTime(mockTuesday);
+      vi.setSystemTime(mockDate);
       vi.spyOn(window, 'alert').mockImplementation(() => {});
     });
 
