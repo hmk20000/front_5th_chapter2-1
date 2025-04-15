@@ -75,11 +75,7 @@ function calculateCartTotal(products) {
       totalCartQuantity += quantity;
       subtotal += originPrice;
       if (quantity >= 10) {
-        if (curItem.id === 'p1') discountRate = 0.1;
-        else if (curItem.id === 'p2') discountRate = 0.15;
-        else if (curItem.id === 'p3') discountRate = 0.2;
-        else if (curItem.id === 'p4') discountRate = 0.05;
-        else if (curItem.id === 'p5') discountRate = 0.25;
+        discountRate = curItem.discountRate;
       }
       totalPrice += originPrice * (1 - discountRate);
     })();
