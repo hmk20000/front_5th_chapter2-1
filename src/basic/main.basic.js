@@ -58,6 +58,7 @@ function calculateCartTotal(products) {
   // 총 수량
   var totalCartQuantity = 0;
 
+  // UI 요소이기 때문에 cartProducts가 아닌 cartItems로 설정
   const $cartList = document.getElementById('cart-items');
   const $cartItems = $cartList.children;
 
@@ -78,8 +79,10 @@ function calculateCartTotal(products) {
     // 전체 합계 업데이트
     subtotal += originPrice;
 
+    // 수량이 10개 이상이면 상품별 할인율 적용
+    const itemDiscountRate = quantity >= 10 ? curItem.discountRate : 0;
     // 할인된 가격을 총액에 더하기
-    totalPrice += originPrice * (1 - quantity >= 0 ? curItem.discountRate : 0);
+    totalPrice += originPrice * (1 - itemDiscountRate);
   }
 
   // 총 수량이 30개 이상이면 25% 할인
