@@ -20,8 +20,8 @@ function main() {
   const $cartList = document.getElementById('cart-items');
   $cartList.addEventListener('click', handleCartItemClick);
 
-  setTimeout(function () {
-    setInterval(function () {
+  setTimeout(() => {
+    setInterval(() => {
       var luckyProduct = products[Math.floor(Math.random() * products.length)];
       if (Math.random() < 0.3 && luckyProduct.quantity > 0) {
         luckyProduct.price = Math.round(luckyProduct.price * 0.8);
@@ -69,7 +69,7 @@ function calculateCartTotal(products) {
 
     // 상품의 수량을 파싱 (예: "상품명 x 2"에서 2를 추출)
     const quantity = parseInt(
-      $cartItems[i].querySelector('span').textContent.split('x ')[1]
+      $cartItems[i].querySelector('span').textContent.split('x ')[1],
     );
     // 전체 수량 업데이트
     totalCartQuantity += quantity;
@@ -129,7 +129,7 @@ function handleAddCart() {
         $cartItem.querySelector('span').textContent = strings.cartItem(
           selectedProduct.name,
           selectedProduct.price,
-          newQuantity
+          newQuantity,
         );
         selectedProduct.quantity--;
       } else {
@@ -180,7 +180,7 @@ function handleCartItemClick(event) {
       }
     } else if ($target.classList.contains('remove-item')) {
       var removedQuantity = parseInt(
-        $item.querySelector('span').textContent.split('x ')[1]
+        $item.querySelector('span').textContent.split('x ')[1],
       );
       product.quantity += removedQuantity;
       $item.remove();
