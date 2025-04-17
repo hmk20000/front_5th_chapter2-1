@@ -6,7 +6,7 @@ import { strings } from './strings';
  * @param {Object} options 옵션
  * @returns {Element} 생성된 엘레멘트
  */
-function createElement(tagName, options) {
+export const createElement = (tagName, options) => {
   if (!tagName) throw new Error(strings.error.tagNameRequired);
   const element = document.createElement(tagName);
 
@@ -23,6 +23,4 @@ function createElement(tagName, options) {
   if (parent) parent.appendChild(element);
 
   return element;
-}
-
-export { createElement };
+};

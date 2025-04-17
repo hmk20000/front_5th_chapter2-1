@@ -10,18 +10,18 @@ import { createCartItem } from './ui';
  */
 export const calculateCartTotal = (products) => {
   // 할인전 총액
-  var subtotal = 0;
+  let subtotal = 0;
   // 할인후 총액
-  var totalPrice = 0;
+  let totalPrice = 0;
   // 총 수량
-  var totalCartQuantity = 0;
+  let totalCartQuantity = 0;
 
   // UI 요소이기 때문에 cartProducts가 아닌 cartItems로 설정
   const $cartList = document.getElementById('cart-items');
   const $cartItems = $cartList.children;
 
   // 장바구니에 있는 각 상품에 대해 반복
-  for (var i = 0; i < $cartItems.length; i++) {
+  for (let i = 0; i < $cartItems.length; i++) {
     // 현재 상품의 정보를 products 배열에서 찾기
     const curItem = products.find((p) => p.id === $cartItems[i].id);
 
@@ -44,10 +44,10 @@ export const calculateCartTotal = (products) => {
   }
 
   // 총 수량이 30개 이상이면 25% 할인
-  var discountRate = 0;
+  let discountRate = 0;
   if (totalCartQuantity >= 30) {
-    var bulkDiscount = totalPrice * 0.25;
-    var itemDiscount = subtotal - totalPrice;
+    const bulkDiscount = totalPrice * 0.25;
+    const itemDiscount = subtotal - totalPrice;
     // 총 할인액이 더 크면 총 할인액 적용
     if (bulkDiscount > itemDiscount) {
       totalPrice = subtotal * (1 - 0.25);
@@ -75,12 +75,12 @@ export const calculateCartTotal = (products) => {
 export const handleAddCart = () => {
   const $productSelect = document.getElementById('product-select');
 
-  var selectedProductId = $productSelect.value;
-  var selectedProduct = products.find((p) => p.id === selectedProductId);
+  const selectedProductId = $productSelect.value;
+  const selectedProduct = products.find((p) => p.id === selectedProductId);
   if (selectedProduct && selectedProduct.quantity > 0) {
-    var $cartItem = document.getElementById(selectedProduct.id);
+    const $cartItem = document.getElementById(selectedProduct.id);
     if ($cartItem) {
-      var newQuantity =
+      const newQuantity =
         parseInt($cartItem.querySelector('span').textContent.split('x ')[1]) +
         1;
       if (newQuantity <= selectedProduct.quantity) {
@@ -106,17 +106,17 @@ export const handleAddCart = () => {
  * 장바구니 아이템 클릭 이벤트 핸들러
  */
 export const handleCartItemClick = (event) => {
-  var $target = event.target;
+  const $target = event.target;
   if (
     $target.classList.contains('quantity-change') ||
     $target.classList.contains('remove-item')
   ) {
-    var productId = $target.dataset.productId;
-    var $item = document.getElementById(productId);
-    var product = products.find((p) => p.id === productId);
+    const productId = $target.dataset.productId;
+    const $item = document.getElementById(productId);
+    const product = products.find((p) => p.id === productId);
     if ($target.classList.contains('quantity-change')) {
-      var quantityChange = parseInt($target.dataset.change);
-      var newQuantity =
+      const quantityChange = parseInt($target.dataset.change);
+      const newQuantity =
         parseInt($item.querySelector('span').textContent.split('x ')[1]) +
         quantityChange;
       if (
@@ -137,7 +137,7 @@ export const handleCartItemClick = (event) => {
         alert(strings.outOfStock);
       }
     } else if ($target.classList.contains('remove-item')) {
-      var removedQuantity = parseInt(
+      const removedQuantity = parseInt(
         $item.querySelector('span').textContent.split('x ')[1],
       );
       product.quantity += removedQuantity;

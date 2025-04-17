@@ -6,12 +6,12 @@ import { products } from './mockData';
  * 메인 레이아웃 생성 함수
  * @param {Element} $root 루트 엘레멘트
  */
-function createMainLayout($root) {
-  let $mainContainer = createElement('div', {
+export const createMainLayout = ($root) => {
+  const $mainContainer = createElement('div', {
     className: 'bg-gray-100 p-8',
     parent: $root,
   });
-  let $contentWrapper = createElement('div', {
+  const $contentWrapper = createElement('div', {
     className:
       'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8',
     parent: $mainContainer,
@@ -48,15 +48,15 @@ function createMainLayout($root) {
     id: 'stock-status',
     parent: $contentWrapper,
   });
-}
+};
 
 /**
  * 장바구니 아이템 생성 함수
  * @param {Object} product 상품 정보
  */
-function createCartItem(product) {
+export const createCartItem = (product) => {
   const $cartList = document.getElementById('cart-items');
-  var $newItem = createElement('div', {
+  const $newItem = createElement('div', {
     id: product.id,
     className: 'flex justify-between items-center mb-2',
     parent: $cartList,
@@ -67,7 +67,7 @@ function createCartItem(product) {
     parent: $newItem,
   });
 
-  var $buttonGroup = createElement('div', {
+  const $buttonGroup = createElement('div', {
     parent: $newItem,
   });
 
@@ -104,17 +104,17 @@ function createCartItem(product) {
       productId: product.id,
     },
   });
-}
+};
 
 /**
  * 상품 옵션 업데이트 함수
  * @param {Array} products 상품 정보
  */
-function renderProductOptions(products) {
+export const renderProductOptions = (products) => {
   const $productSelect = document.getElementById('product-select');
   $productSelect.innerHTML = '';
 
-  products.forEach(function (product) {
+  products.forEach((product) => {
     createElement('option', {
       value: product.id,
       textContent: product.name + ' - ' + product.price + '원',
@@ -122,14 +122,14 @@ function renderProductOptions(products) {
       disabled: product.quantity === 0,
     });
   });
-}
+};
 
 /**
  * 장바구니 총액 업데이트 함수
  * @param {number} discountRate 할인율
  * @param {number} totalPrice 총액
  */
-function renderCartTotal(discountRate, totalPrice) {
+export const renderCartTotal = (discountRate, totalPrice) => {
   const $totalPrice = document.getElementById('cart-total');
   $totalPrice.textContent = strings.totalPrice(Math.round(totalPrice));
   if (discountRate > 0) {
@@ -141,16 +141,16 @@ function renderCartTotal(discountRate, totalPrice) {
   }
   renderStockStatus(products);
   renderPoints($totalPrice, totalPrice);
-}
+};
 
 /**
  * 포인트 렌더링 함수
  * @param {Element} $totalPrice 총액 엘레멘트
  * @param {number} totalPrice 총액
  */
-const renderPoints = ($totalPrice, totalPrice) => {
+export const renderPoints = ($totalPrice, totalPrice) => {
   let points = Math.floor(totalPrice / 1000);
-  var $point = document.getElementById('loyalty-points');
+  let $point = document.getElementById('loyalty-points');
   if (!$point) {
     $point = createElement('span', {
       id: 'loyalty-points',
@@ -166,20 +166,13 @@ const renderPoints = ($totalPrice, totalPrice) => {
  * @param {Element} $stockStatusList 재고 상태 표시 엘레멘트
  * @param {Array} products 상품 정보
  */
-function renderStockStatus(products) {
+export const renderStockStatus = (products) => {
   const $stockStatusList = document.getElementById('stock-status');
-  var stockStatusMessage = '';
-  products.forEach(function (item) {
+  let stockStatusMessage = '';
+  products.forEach((item) => {
     if (item.quantity < 5) {
       stockStatusMessage += strings.stockStatus(item.name, item.quantity);
     }
   });
   $stockStatusList.textContent = stockStatusMessage;
-}
-
-export {
-  createMainLayout,
-  createCartItem,
-  renderProductOptions,
-  renderCartTotal,
 };

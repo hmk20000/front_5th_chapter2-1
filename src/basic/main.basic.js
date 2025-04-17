@@ -7,7 +7,7 @@ import {
   handleCartItemClick,
 } from './shared/cart';
 
-function main() {
+(() => {
   createMainLayout(document.getElementById('app'));
   renderProductOptions(products);
   calculateCartTotal(products);
@@ -19,6 +19,4 @@ function main() {
 
   const $cartList = document.getElementById('cart-items');
   $cartList.addEventListener('click', handleCartItemClick);
-}
-
-main();
+})();
