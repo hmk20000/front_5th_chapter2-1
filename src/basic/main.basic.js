@@ -6,8 +6,7 @@ import {
   renderCartTotal,
 } from './shared/ui';
 import { products } from './shared/mockData';
-
-var lastSelectedProductId;
+import { store } from './shared/store';
 
 function main() {
   createMainLayout(document.getElementById('app'));
@@ -32,9 +31,11 @@ function main() {
   }, Math.random() * 10000);
   setTimeout(function () {
     setInterval(function () {
-      if (lastSelectedProductId) {
+      if (store.lastSelectedProductId) {
         var suggest = products.find(function (product) {
-          return product.id !== lastSelectedProductId && product.quantity > 0;
+          return (
+            product.id !== store.lastSelectedProductId && product.quantity > 0
+          );
         });
         if (suggest) {
           alert(strings.suggestSale(suggest.name));
@@ -140,7 +141,7 @@ function handleAddCart() {
       selectedProduct.quantity--;
     }
     calculateCartTotal(products);
-    lastSelectedProductId = selectedProductId;
+    store.lastSelectedProductId = selectedProductId;
   }
 }
 
