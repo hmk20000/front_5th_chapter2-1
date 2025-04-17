@@ -7,44 +7,21 @@ import {
 } from './shared/ui';
 import { products } from './shared/mockData';
 import { store } from './shared/store';
+import { luckySale, suggestSale } from './shared/sale';
 
 function main() {
   createMainLayout(document.getElementById('app'));
   renderProductOptions(products);
   calculateCartTotal(products);
 
+  luckySale();
+  suggestSale();
+
   const $addCart = document.getElementById('add-to-cart');
   $addCart.addEventListener('click', handleAddCart);
 
   const $cartList = document.getElementById('cart-items');
   $cartList.addEventListener('click', handleCartItemClick);
-
-  setTimeout(() => {
-    setInterval(() => {
-      var luckyProduct = products[Math.floor(Math.random() * products.length)];
-      if (Math.random() < 0.3 && luckyProduct.quantity > 0) {
-        luckyProduct.price = Math.round(luckyProduct.price * 0.8);
-        alert(strings.luckySale(luckyProduct.name));
-        renderProductOptions(products);
-      }
-    }, 30000);
-  }, Math.random() * 10000);
-  setTimeout(function () {
-    setInterval(function () {
-      if (store.lastSelectedProductId) {
-        var suggest = products.find(function (product) {
-          return (
-            product.id !== store.lastSelectedProductId && product.quantity > 0
-          );
-        });
-        if (suggest) {
-          alert(strings.suggestSale(suggest.name));
-          suggest.price = Math.round(suggest.price * 0.95);
-          renderProductOptions(suggest);
-        }
-      }
-    }, 60000);
-  }, Math.random() * 20000);
 }
 
 /**
