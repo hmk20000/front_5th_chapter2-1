@@ -76,17 +76,17 @@ describe('basic test', () => {
       addBtn.click();
       expect(cartDisp.children.length).toBe(1);
       expect(cartDisp.children[0].querySelector('span').textContent).toContain(
-        '상품1 - 10000원 x 1'
+        '상품1 - 10000원 x 1',
       );
     });
 
     it('장바구니에서 상품 수량을 변경할 수 있는지 확인', () => {
       const increaseBtn = cartDisp.querySelector(
-        '.quantity-change[data-change="1"]'
+        '.quantity-change[data-change="1"]',
       );
       increaseBtn.click();
       expect(cartDisp.children[0].querySelector('span').textContent).toContain(
-        '상품1 - 10000원 x 2'
+        '상품1 - 10000원 x 2',
       );
     });
 
@@ -118,7 +118,7 @@ describe('basic test', () => {
       sel.value = 'p2';
       addBtn.click();
       expect(document.getElementById('loyalty-points').textContent).toContain(
-        '(포인트: 128)'
+        '(포인트: 128)',
       );
     });
 
@@ -137,7 +137,7 @@ describe('basic test', () => {
       sel.value = 'p1';
       addBtn.click();
       expect(document.getElementById('cart-total').textContent).toContain(
-        '(10.0% 할인 적용)'
+        '(10.0% 할인 적용)',
       );
     });
 
@@ -148,7 +148,7 @@ describe('basic test', () => {
 
       // p4 상품이 장바구니에 없는지 확인
       const p4InCart = Array.from(cartDisp.children).some(
-        (item) => item.id === 'p4'
+        (item) => item.id === 'p4',
       );
       expect(p4InCart).toBe(false);
       expect(stockInfo.textContent).toContain('상품4: 품절');
@@ -160,13 +160,13 @@ describe('basic test', () => {
 
       // p5 상품이 장바구니에 추가되었는지 확인
       const p5InCart = Array.from(cartDisp.children).some(
-        (item) => item.id === 'p5'
+        (item) => item.id === 'p5',
       );
       expect(p5InCart).toBe(true);
 
       // 수량 증가 버튼 찾기
       const increaseBtn = cartDisp.querySelector(
-        '#p5 .quantity-change[data-change="1"]'
+        '#p5 .quantity-change[data-change="1"]',
       );
       expect(increaseBtn).not.toBeNull();
 
@@ -180,7 +180,7 @@ describe('basic test', () => {
 
       // 재고 부족 알림이 표시되었는지 확인
       expect(window.alert).toHaveBeenCalledWith(
-        expect.stringContaining('재고가 부족합니다')
+        expect.stringContaining('재고가 부족합니다'),
       );
 
       // 장바구니의 상품 수량이 10개인지 확인
