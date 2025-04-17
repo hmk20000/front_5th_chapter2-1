@@ -20,3 +20,14 @@ export const strings = {
     tagNameRequired: 'tagName is required',
   },
 };
+
+export const NUMBER = {
+  TICK_TIME: 1000,
+  LUCKY_SALE_START: 10,
+  SUGGEST_SALE_START: 20,
+  LUCKY_SALE_INTERVAL: 30,
+  SUGGEST_SALE_INTERVAL: 60,
+  LUCKY_SALE_RATE: 0.3, // 번개세일 확률
+  LUCKY_SALE_DISCOUNT_RATE: 0.8, // 번개세일 할인율
+  SUGGEST_SALE_DISCOUNT_RATE: 0.95, // 추천세일 할인율
+};
