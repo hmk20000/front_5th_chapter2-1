@@ -7,6 +7,10 @@ import {
   it,
   vi,
 } from 'vitest';
+import { store } from '../shared/store';
+import { NUMBER } from '../shared/strings';
+import { initSale } from '../shared/sale';
+import { products } from '../shared/mockData';
 
 describe('basic test', () => {
   describe.each([
@@ -123,7 +127,33 @@ describe('basic test', () => {
     });
 
     it('번개세일 기능이 정상적으로 동작하는지 확인', () => {
-      // 일부러 랜덤이 가득한 기능을 넣어서 테스트 하기를 어렵게 만들었습니다. 이런 코드는 어떻게 하면 좋을지 한번 고민해보세요!
+      // 원래 가격 저장
+      const originalPrices = products.map((p) => ({
+        id: p.id,
+        price: p.price,
+      }));
+
+      // 랜덤 값을 0.2로 고정 (NUMBER.LUCKY_SALE_RATE보다 작게)
+      vi.spyOn(Math, 'random').mockReturnValue(0.2);
+      // 추천 세일 동작 안하도록 설정
+      store.lastSelectedProductId = null;
+
+      // 세일 초기화
+      initSale();
+
+      // 번개세일이 나올 수 있도록 시간 진행
+      vi.advanceTimersByTime(NUMBER.TICK_TIME * NUMBER.LUCKY_SALE_INTERVAL);
+
+      // alert가 발생 했는지 확인
+      expect(window.alert).toHaveBeenCalled();
+
+      // 가격을 원래대로 복구
+      products.forEach((p) => {
+        const original = originalPrices.find((op) => op.id === p.id);
+        if (original) {
+          p.price = original.price;
+        }
+      });
     });
 
     it('추천 상품 알림이 표시되는지 확인', () => {
